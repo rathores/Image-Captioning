@@ -8,6 +8,7 @@ import PIL
 from PIL import Image, ImageTk
 import time
 from sendemail import email
+import GenerateVoice as GV
 
 window=Tk()
 
@@ -48,14 +49,20 @@ def Caption_Window(image_path, sentence):
 	canvas.pack()
 	Filter_Phone=['smartphone', 'phone', 'mobile', 'Smartphone', 'Phone' ,'Mobile']
 	caps = str(sentence)
-	image_name = image_path
 	for content in Filter_Phone:
 		if content in caps:
-			print("Can not display image")
+			sleep(0.05)
+			GV.speak("Can not display image")
 			image_name = 'blocked.jpg'
+			print("Can not display image")
+			break		
+		else:
+			image_name = image_path
 	r_image = cv2.imread(image_name)
 	r_image = cv2.resize(r_image,(400,400))
-	cv2.imwrite(image_path, r_image) 
+	font = cv2.FONT_HERSHEY_SIMPLEX
+	cv2.putText(r_image,sentence,(10,500), font, 3,(255,255,0),2)
+	cv2.imwrite(image_name, r_image) 
 	img = ImageTk.PhotoImage(Image.open(image_name))
 	canvas.create_image(0,0, anchor=NW, image=img)
 
@@ -73,13 +80,13 @@ def Caption_Window(image_path, sentence):
 	
 	def Email(image_path,sentence):
 		mail_obj = email()
-		mail_obj.configure('icaption88@gmail.com','sahilsneh88')
-		sender = 'icaption88@gmail.com'
-		password = 'sahilsneh88'
+		mail_obj.configure('','')
+		sender = ''
+		password = ''
 		message = sentence
-		receivers = ['sneh.rathore96@gmail.com', 'sahil8sharma8@gmail.com']
+		receivers = ['', '']
 		lst = [image_path,'caption.wav']
-		mail_obj.send_email('icaption88@gmail.com',password,lst,receivers,message)
+		mail_obj.send_email('',password,lst,receivers,message)
 
 	b2=Button(caption, text="Send as Email", command= lambda: Email(image_name,sentence))
 	b2.pack(padx=20, pady=5)
@@ -94,8 +101,9 @@ def Capture_Img():
     #im = Image.open(img)
     #im.show()
     image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), img)
-    #sentence=Caption(image_path, '2LczFk27N0WOxYnhF123Zg')
-    sentence=Caption(image_path, '_XQLIiTlbfyHEDJYOwEktQ')
+
+    sentence=Caption(image_path, '')
+    
     Caption_Window(image_path, sentence)
 
 #to use the stored images
@@ -108,8 +116,8 @@ def Stored_Img():
     
     image_path=Openfile()
 
-    #sentence=Caption(image_path, '2LczFk27N0WOxYnhF123Zg')
-    sentence=Caption(image_path, '_XQLIiTlbfyHEDJYOwEktQ')   
+    
+    sentence=Caption(image_path, '') 
     Caption_Window(image_path, sentence)
 
     

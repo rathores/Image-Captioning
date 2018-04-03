@@ -2,8 +2,7 @@ import cloudsight
 import GenerateVoice as GV
 import time
 def Caption(image_name, passs):
-	auth=cloudsight.SimpleAuth(passs)
-	api = cloudsight.API(auth)	
+	
 	Filter_chocolate = ['chocolate']
 	filter_phone=['smartphone', 'phone', 'mobile', 'Smartphone', 'Phone' ,'Mobile']
 	with open(image_name, 'rb') as f:
@@ -22,10 +21,10 @@ def Caption(image_name, passs):
 					break
 			for content in filter_phone:
 				if content in caption:
-					print("Alert: %s Detected.. Filtered Content.." %content)
-					GV.speak("Alert: %s Detected.. Filtered Content.." %content)
-					return
-			print(caption)
+					caption = "Alert: %s Detected.. Filtered Content.." %content
+					#print(caption)
+					#print("Alert: %s Detected.. Filtered Content.." %content)					
+			#print(caption)
 			GV.speak(caption)
 			return(caption)
 		except:
@@ -34,5 +33,4 @@ def Caption(image_name, passs):
 		print('Cannot Process Image')
 
 if __name__ == '__main__':
-	#Caption('try.jpg', '2LczFk27N0WOxYnhF123Zg')
-	Caption('try.jpg', '_XQLIiTlbfyHEDJYOwEktQ')
+	Caption('try.jpg', '')
