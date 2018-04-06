@@ -7,9 +7,11 @@ from GenerateCaption import Caption
 import PIL
 from PIL import Image, ImageTk
 import time
+from time import sleep
 from sendemail import email
 import GenerateVoice as GV
 
+#Using Tkinter for GUI
 window=Tk()
 
 window.title("Drishti - Vision for Life")
@@ -47,7 +49,7 @@ def Caption_Window(image_path, sentence):
 	canvas_height =400
 	canvas = Canvas(caption,width=canvas_width,height=canvas_height)
 	canvas.pack()
-	Filter_Phone=['smartphone', 'phone', 'mobile', 'Smartphone', 'Phone' ,'Mobile']
+	Filter_Phone=['smartphone', 'phone', 'mobile', 'Smartphone', 'Phone' ,'Mobile', 'blood', '']
 	caps = str(sentence)
 	for content in Filter_Phone:
 		if content in caps:
@@ -58,16 +60,19 @@ def Caption_Window(image_path, sentence):
 			break		
 		else:
 			image_name = image_path
+
+	#resizing of the image
 	r_image = cv2.imread(image_name)
 	r_image = cv2.resize(r_image,(400,400))
+
+	#to write the caption over the image
 	font = cv2.FONT_HERSHEY_SIMPLEX
-	cv2.putText(r_image,sentence,(10,500), font, 3,(255,255,0),2)
+	cv2.putText(r_image,caps,(10,350), font, 5,(72,61,139),2)
 	cv2.imwrite(image_name, r_image) 
+	#To display the Image along with the Caption
 	img = ImageTk.PhotoImage(Image.open(image_name))
 	canvas.create_image(0,0, anchor=NW, image=img)
 
-	#imglabel = Label(caption, image=img).grid(row=1, column=1)
-	#panel = Label(caption, image = img)
 	head = Label(caption, text = "Generated Caption") 
 	head.pack(side = TOP)
 	message = Label(caption, text = sentence)
@@ -76,17 +81,18 @@ def Caption_Window(image_path, sentence):
 		os.system('play caption.wav')
 	b1=Button(caption, text="Replay", command= play)
 	b1.pack(padx=20, pady=5)
-	#play = lambda: Playsound('capture.wav', SND_Filenamee)
 	
+	#Function to send email
 	def Email(image_path,sentence):
+		#calls the email() function of sendemail file by creating obj
 		mail_obj = email()
-		mail_obj.configure('','')
-		sender = ''
-		password = ''
+		mail_obj.configure(' ',' ')
+		sender = ' '
+		password = ' '
 		message = sentence
-		receivers = ['', '']
+		receivers = [' ', ' ']
 		lst = [image_path,'caption.wav']
-		mail_obj.send_email('',password,lst,receivers,message)
+		mail_obj.send_email(' ',password,lst,receivers,message)
 
 	b2=Button(caption, text="Send as Email", command= lambda: Email(image_name,sentence))
 	b2.pack(padx=20, pady=5)
@@ -98,12 +104,11 @@ def Caption_Window(image_path, sentence):
 #to capture real time image
 def Capture_Img():
     img = Capture_Image()
-    #im = Image.open(img)
-    #im.show()
+   
     image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), img)
 
-    sentence=Caption(image_path, '')
-    
+    sentence=Caption(image_path, ' ')
+   
     Caption_Window(image_path, sentence)
 
 #to use the stored images
@@ -117,7 +122,7 @@ def Stored_Img():
     image_path=Openfile()
 
     
-    sentence=Caption(image_path, '') 
+    sentence=Caption(image_path, ' ') 
     Caption_Window(image_path, sentence)
 
     
